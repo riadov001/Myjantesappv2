@@ -25,6 +25,7 @@ export const Colors = {
     success: "#10b981",
     warning: "#f59e0b",
     error: "#dc2626",
+    info: "#3b82f6",
   },
   dark: {
     text: "#f9fafb",
@@ -47,6 +48,7 @@ export const Colors = {
     success: "#10b981",
     warning: "#f59e0b",
     error: "#dc2626",
+    info: "#3b82f6",
   },
 };
 

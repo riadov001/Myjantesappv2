@@ -4,30 +4,29 @@ import { Feather } from '@expo/vector-icons';
 import { BlurView } from 'expo-blur';
 import { Platform, StyleSheet } from 'react-native';
 
-import ClientDashboardScreen from '@/screens/client/ClientDashboardScreen';
-import QuotesScreen from '@/screens/client/QuotesScreen';
-import InvoicesScreen from '@/screens/client/InvoicesScreen';
-import ReservationsScreen from '@/screens/client/ReservationsScreen';
-import ProfileScreen from '@/screens/client/ProfileScreen';
+import AdminDashboardScreen from '@/screens/admin/AdminDashboardScreen';
+import AdminQuotesScreen from '@/screens/admin/AdminQuotesScreen';
+import AdminInvoicesScreen from '@/screens/admin/AdminInvoicesScreen';
+import AdminReservationsScreen from '@/screens/admin/AdminReservationsScreen';
+import AdminMoreScreen from '@/screens/admin/AdminMoreScreen';
 import { HeaderTitle } from '@/components/HeaderTitle';
 import { useTheme } from '@/hooks/useTheme';
-
-export type ClientTabParamList = {
-  HomeTab: undefined;
-  QuotesTab: undefined;
-  InvoicesTab: undefined;
-  ReservationsTab: undefined;
-  ProfileTab: undefined;
+export type AdminTabParamList = {
+  AdminHomeTab: undefined;
+  AdminQuotesTab: undefined;
+  AdminInvoicesTab: undefined;
+  AdminReservationsTab: undefined;
+  AdminMoreTab: undefined;
 };
 
-const Tab = createBottomTabNavigator<ClientTabParamList>();
+const Tab = createBottomTabNavigator<AdminTabParamList>();
 
-export default function ClientTabNavigator() {
+export default function AdminTabNavigator() {
   const { theme, isDark } = useTheme();
 
   return (
     <Tab.Navigator
-      initialRouteName="HomeTab"
+      initialRouteName="AdminHomeTab"
       screenOptions={{
         headerTitleAlign: 'center',
         headerTintColor: theme.text,
@@ -57,43 +56,43 @@ export default function ClientTabNavigator() {
       }}
     >
       <Tab.Screen
-        name="HomeTab"
-        component={ClientDashboardScreen}
+        name="AdminHomeTab"
+        component={AdminDashboardScreen}
         options={{
           title: 'Accueil',
-          headerTitle: () => <HeaderTitle title="MyJantes" />,
+          headerTitle: () => <HeaderTitle title="MyJantes Admin" />,
           tabBarIcon: ({ color, size }) => (
             <Feather name="home" size={size} color={color} />
           ),
         }}
       />
       <Tab.Screen
-        name="QuotesTab"
-        component={QuotesScreen}
+        name="AdminQuotesTab"
+        component={AdminQuotesScreen}
         options={{
           title: 'Devis',
-          headerTitle: 'Mes Devis',
+          headerTitle: 'Gestion des Devis',
           tabBarIcon: ({ color, size }) => (
             <Feather name="file-text" size={size} color={color} />
           ),
         }}
       />
       <Tab.Screen
-        name="InvoicesTab"
-        component={InvoicesScreen}
+        name="AdminInvoicesTab"
+        component={AdminInvoicesScreen}
         options={{
           title: 'Factures',
-          headerTitle: 'Mes Factures',
+          headerTitle: 'Gestion des Factures',
           tabBarIcon: ({ color, size }) => (
             <Feather name="credit-card" size={size} color={color} />
           ),
         }}
       />
       <Tab.Screen
-        name="ReservationsTab"
-        component={ReservationsScreen}
+        name="AdminReservationsTab"
+        component={AdminReservationsScreen}
         options={{
-          title: 'Réservations',
+          title: 'RDV',
           headerTitle: 'Réservations',
           tabBarIcon: ({ color, size }) => (
             <Feather name="calendar" size={size} color={color} />
@@ -101,13 +100,13 @@ export default function ClientTabNavigator() {
         }}
       />
       <Tab.Screen
-        name="ProfileTab"
-        component={ProfileScreen}
+        name="AdminMoreTab"
+        component={AdminMoreScreen}
         options={{
-          title: 'Profil',
-          headerTitle: 'Profil',
+          title: 'Plus',
+          headerTitle: 'Plus',
           tabBarIcon: ({ color, size }) => (
-            <Feather name="user" size={size} color={color} />
+            <Feather name="menu" size={size} color={color} />
           ),
         }}
       />
