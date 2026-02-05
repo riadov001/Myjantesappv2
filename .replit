@@ -73,3 +73,4 @@ ensurePreviewReachable = "/status"
 
 [userenv.shared]
 EXPO_PUBLIC_DOMAIN = "myjantes.mytoolsgroup.eu"
+BACKEND_URL = "https://myjantes.mytoolsgroup.eu"
