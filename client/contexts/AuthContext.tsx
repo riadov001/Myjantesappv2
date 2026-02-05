@@ -25,12 +25,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const fetchUser = async (): Promise<User | null> => {
     try {
       const baseUrl = getApiUrl();
-      const response = await fetch(`${baseUrl}api/user`, {
+      const response = await fetch(`${baseUrl}api/auth/me`, {
         credentials: 'include',
       });
       if (response.ok) {
-        const userData = await response.json();
-        return userData;
+        const contentType = response.headers.get('content-type');
+        if (contentType && contentType.includes('application/json')) {
+          const userData = await response.json();
+          return userData;
+        }
       }
       return null;
     } catch (error) {
@@ -76,7 +79,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const login = async () => {
     try {
       const baseUrl = getApiUrl();
-      const loginUrl = `${baseUrl}api/login`;
+      const loginUrl = `${baseUrl}api/auth/login`;
       
       if (Platform.OS === 'web') {
         window.location.href = loginUrl;
@@ -98,7 +101,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const logout = async () => {
     try {
       const baseUrl = getApiUrl();
-      await fetch(`${baseUrl}api/logout`, {
+      await fetch(`${baseUrl}api/auth/logout`, {
         credentials: 'include',
       });
       setUser(null);
