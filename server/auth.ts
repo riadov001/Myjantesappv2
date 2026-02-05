@@ -1,7 +1,7 @@
 import { Router, Request, Response } from "express";
 import { db } from "./db";
 import { users, sessions } from "@shared/schema";
-import { eq } from "drizzle-orm";
+import { eq, or } from "drizzle-orm";
 import bcrypt from "bcryptjs";
 import { randomBytes } from "crypto";
 
@@ -42,6 +42,64 @@ async function getUserFromToken(token: string) {
   });
 }
 
+async function verifyGoogleToken(idToken: string): Promise<{
+  email: string;
+  name?: string;
+  picture?: string;
+  sub: string;
+} | null> {
+  try {
+    const response = await fetch(`https://oauth2.googleapis.com/tokeninfo?id_token=${idToken}`);
+    if (!response.ok) return null;
+    const data = await response.json();
+    if (!data.email) return null;
+    return {
+      email: data.email,
+      name: data.name,
+      picture: data.picture,
+      sub: data.sub,
+    };
+  } catch (error) {
+    console.error("Google token verification error:", error);
+    return null;
+  }
+}
+
+async function verifyFacebookToken(accessToken: string): Promise<{
+  email: string;
+  name?: string;
+  picture?: string;
+  id: string;
+} | null> {
+  try {
+    const response = await fetch(
+      `https://graph.facebook.com/me?fields=id,name,email,picture&access_token=${accessToken}`
+    );
+    if (!response.ok) return null;
+    const data = await response.json();
+    if (!data.email) return null;
+    return {
+      email: data.email,
+      name: data.name,
+      picture: data.picture?.data?.url,
+      id: data.id,
+    };
+  } catch (error) {
+    console.error("Facebook token verification error:", error);
+    return null;
+  }
+}
+
+function formatUserResponse(user: any) {
+  return {
+    id: user.id,
+    email: user.email,
+    name: user.name,
+    profileImage: user.profileImage,
+    role: user.role,
+  };
+}
+
 router.post("/register", async (req: Request, res: Response) => {
   try {
     const { email, password, name } = req.body;
@@ -76,13 +134,7 @@ router.post("/register", async (req: Request, res: Response) => {
       maxAge: 30 * 24 * 60 * 60 * 1000,
     });
     
-    res.json({
-      id: user.id,
-      email: user.email,
-      name: user.name,
-      profileImage: user.profileImage,
-      role: user.role,
-    });
+    res.json(formatUserResponse(user));
   } catch (error) {
     console.error("Register error:", error);
     res.status(500).json({ message: "Erreur lors de l'inscription" });
@@ -120,16 +172,182 @@ router.post("/login", async (req: Request, res: Response) => {
       maxAge: 30 * 24 * 60 * 60 * 1000,
     });
     
-    res.json({
-      id: user.id,
-      email: user.email,
-      name: user.name,
-      profileImage: user.profileImage,
-      role: user.role,
-    });
+    res.json(formatUserResponse(user));
   } catch (error) {
     console.error("Login error:", error);
     res.status(500).json({ message: "Erreur lors de la connexion" });
+  }
+});
+
+router.post("/oauth/google", async (req: Request, res: Response) => {
+  try {
+    const { idToken } = req.body;
+    
+    if (!idToken) {
+      return res.status(400).json({ message: "Token Google requis" });
+    }
+    
+    const googleUser = await verifyGoogleToken(idToken);
+    if (!googleUser) {
+      return res.status(401).json({ message: "Token Google invalide" });
+    }
+    
+    let user = await db.query.users.findFirst({
+      where: or(
+        eq(users.providerId, googleUser.sub),
+        eq(users.email, googleUser.email)
+      ),
+    });
+    
+    if (user) {
+      if (user.authProvider !== "google" || user.providerId !== googleUser.sub) {
+        [user] = await db.update(users)
+          .set({ 
+            providerId: googleUser.sub, 
+            authProvider: "google", 
+            profileImage: googleUser.picture,
+            name: user.name || googleUser.name,
+          })
+          .where(eq(users.id, user.id))
+          .returning();
+      }
+    } else {
+      [user] = await db.insert(users).values({
+        email: googleUser.email,
+        name: googleUser.name || googleUser.email.split("@")[0],
+        profileImage: googleUser.picture,
+        authProvider: "google",
+        providerId: googleUser.sub,
+      }).returning();
+    }
+    
+    const token = await createSession(user.id);
+    
+    res.cookie("auth_token", token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "lax",
+      maxAge: 30 * 24 * 60 * 60 * 1000,
+    });
+    
+    res.json(formatUserResponse(user));
+  } catch (error) {
+    console.error("Google OAuth error:", error);
+    res.status(500).json({ message: "Erreur lors de l'authentification Google" });
+  }
+});
+
+router.post("/oauth/facebook", async (req: Request, res: Response) => {
+  try {
+    const { accessToken } = req.body;
+    
+    if (!accessToken) {
+      return res.status(400).json({ message: "Token Facebook requis" });
+    }
+    
+    const facebookUser = await verifyFacebookToken(accessToken);
+    if (!facebookUser) {
+      return res.status(401).json({ message: "Token Facebook invalide" });
+    }
+    
+    let user = await db.query.users.findFirst({
+      where: or(
+        eq(users.providerId, facebookUser.id),
+        eq(users.email, facebookUser.email)
+      ),
+    });
+    
+    if (user) {
+      if (user.authProvider !== "facebook" || user.providerId !== facebookUser.id) {
+        [user] = await db.update(users)
+          .set({ 
+            providerId: facebookUser.id, 
+            authProvider: "facebook", 
+            profileImage: facebookUser.picture,
+            name: user.name || facebookUser.name,
+          })
+          .where(eq(users.id, user.id))
+          .returning();
+      }
+    } else {
+      [user] = await db.insert(users).values({
+        email: facebookUser.email,
+        name: facebookUser.name || facebookUser.email.split("@")[0],
+        profileImage: facebookUser.picture,
+        authProvider: "facebook",
+        providerId: facebookUser.id,
+      }).returning();
+    }
+    
+    const token = await createSession(user.id);
+    
+    res.cookie("auth_token", token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "lax",
+      maxAge: 30 * 24 * 60 * 60 * 1000,
+    });
+    
+    res.json(formatUserResponse(user));
+  } catch (error) {
+    console.error("Facebook OAuth error:", error);
+    res.status(500).json({ message: "Erreur lors de l'authentification Facebook" });
+  }
+});
+
+router.post("/oauth/apple", async (req: Request, res: Response) => {
+  try {
+    const { identityToken, user: appleUserId, email, fullName } = req.body;
+    
+    if (!appleUserId) {
+      return res.status(400).json({ message: "Données Apple requises" });
+    }
+    
+    const userEmail = email || `${appleUserId}@privaterelay.appleid.com`;
+    const userName = fullName?.givenName 
+      ? `${fullName.givenName} ${fullName.familyName || ''}`.trim()
+      : undefined;
+    
+    let user = await db.query.users.findFirst({
+      where: or(
+        eq(users.providerId, appleUserId),
+        eq(users.email, userEmail)
+      ),
+    });
+    
+    if (user) {
+      if (user.authProvider !== "apple" || user.providerId !== appleUserId) {
+        [user] = await db.update(users)
+          .set({ 
+            providerId: appleUserId, 
+            authProvider: "apple",
+            name: user.name || userName,
+          })
+          .where(eq(users.id, user.id))
+          .returning();
+      }
+    } else {
+      [user] = await db.insert(users).values({
+        email: userEmail,
+        name: userName || userEmail.split("@")[0],
+        authProvider: "apple",
+        providerId: appleUserId,
+      }).returning();
+    }
+    
+    const token = await createSession(user.id);
+    
+    res.cookie("auth_token", token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "lax",
+      maxAge: 30 * 24 * 60 * 60 * 1000,
+    });
+    
+    res.json(formatUserResponse(user));
+  } catch (error) {
+    console.error("Apple OAuth error:", error);
+    res.status(500).json({ message: "Erreur lors de l'authentification Apple" });
   }
 });
 
@@ -142,28 +360,25 @@ router.post("/oauth", async (req: Request, res: Response) => {
     }
     
     let user = await db.query.users.findFirst({
-      where: eq(users.providerId, providerId),
+      where: or(
+        eq(users.providerId, providerId),
+        eq(users.email, email)
+      ),
     });
     
-    if (!user) {
-      user = await db.query.users.findFirst({
-        where: eq(users.email, email),
-      });
-      
-      if (user) {
-        [user] = await db.update(users)
-          .set({ providerId, authProvider: provider, profileImage })
-          .where(eq(users.id, user.id))
-          .returning();
-      } else {
-        [user] = await db.insert(users).values({
-          email,
-          name: name || email.split("@")[0],
-          profileImage,
-          authProvider: provider,
-          providerId,
-        }).returning();
-      }
+    if (user) {
+      [user] = await db.update(users)
+        .set({ providerId, authProvider: provider, profileImage })
+        .where(eq(users.id, user.id))
+        .returning();
+    } else {
+      [user] = await db.insert(users).values({
+        email,
+        name: name || email.split("@")[0],
+        profileImage,
+        authProvider: provider,
+        providerId,
+      }).returning();
     }
     
     const token = await createSession(user.id);
@@ -175,13 +390,7 @@ router.post("/oauth", async (req: Request, res: Response) => {
       maxAge: 30 * 24 * 60 * 60 * 1000,
     });
     
-    res.json({
-      id: user.id,
-      email: user.email,
-      name: user.name,
-      profileImage: user.profileImage,
-      role: user.role,
-    });
+    res.json(formatUserResponse(user));
   } catch (error) {
     console.error("OAuth error:", error);
     res.status(500).json({ message: "Erreur lors de l'authentification OAuth" });
@@ -202,13 +411,7 @@ router.get("/user", async (req: Request, res: Response) => {
       return res.status(401).json({ message: "Session expirée" });
     }
     
-    res.json({
-      id: user.id,
-      email: user.email,
-      name: user.name,
-      profileImage: user.profileImage,
-      role: user.role,
-    });
+    res.json(formatUserResponse(user));
   } catch (error) {
     console.error("Get user error:", error);
     res.status(500).json({ message: "Erreur serveur" });
