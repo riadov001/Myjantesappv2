@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode, useCallback } from 'react';
 import * as AppleAuthentication from 'expo-apple-authentication';
+import * as Google from 'expo-auth-session/providers/google';
 import * as WebBrowser from 'expo-web-browser';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Platform } from 'react-native';
@@ -18,6 +19,7 @@ interface AuthContextType {
   loginWithGoogle: () => Promise<{ success: boolean; error?: string }>;
   logout: () => Promise<void>;
   refreshUser: () => Promise<void>;
+  isGoogleConfigured: boolean;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -27,6 +29,17 @@ const AUTH_STORAGE_KEY = '@myjantes_auth';
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+
+  const googleClientId = process.env.EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID;
+  const isGoogleConfigured = !!googleClientId;
+
+  const [, googleResponse, googlePromptAsync] = Google.useIdTokenAuthRequest(
+    isGoogleConfigured ? {
+      clientId: googleClientId,
+      iosClientId: process.env.EXPO_PUBLIC_GOOGLE_IOS_CLIENT_ID,
+      androidClientId: process.env.EXPO_PUBLIC_GOOGLE_ANDROID_CLIENT_ID,
+    } : { clientId: '' }
+  );
 
   const fetchUser = useCallback(async (): Promise<User | null> => {
     try {
@@ -93,6 +106,30 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     };
     initAuth();
   }, [fetchUser]);
+
+  useEffect(() => {
+    const handleGoogleResponse = async () => {
+      if (googleResponse?.type === 'success') {
+        const { id_token } = googleResponse.params;
+        if (id_token) {
+          try {
+            const baseUrl = getApiUrl();
+            const response = await fetch(`${baseUrl}api/auth/oauth/google`, {
+              method: 'POST',
+              credentials: 'include',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ idToken: id_token }),
+            });
+            const data = await response.json();
+            await handleAuthResponse(data);
+          } catch (error) {
+            console.error('Google auth error:', error);
+          }
+        }
+      }
+    };
+    handleGoogleResponse();
+  }, [googleResponse]);
 
   const loginWithEmail = async (email: string, password: string): Promise<{ success: boolean; error?: string }> => {
     try {
@@ -168,7 +205,22 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   };
 
   const loginWithGoogle = async (): Promise<{ success: boolean; error?: string }> => {
-    return { success: false, error: 'Google Sign-In sera disponible prochainement' };
+    if (!isGoogleConfigured) {
+      return { success: false, error: 'Google Sign-In non configuré. Veuillez ajouter EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID.' };
+    }
+    
+    try {
+      const result = await googlePromptAsync();
+      if (result.type === 'success') {
+        return { success: true };
+      } else if (result.type === 'cancel' || result.type === 'dismiss') {
+        return { success: false, error: 'Connexion annulée' };
+      }
+      return { success: false, error: 'Erreur Google Sign-In' };
+    } catch (error) {
+      console.error('Google login error:', error);
+      return { success: false, error: 'Erreur Google Sign-In' };
+    }
   };
 
   const logout = async () => {
@@ -197,6 +249,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         loginWithGoogle,
         logout,
         refreshUser,
+        isGoogleConfigured,
       }}
     >
       {children}

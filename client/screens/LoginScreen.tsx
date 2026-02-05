@@ -17,7 +17,7 @@ type AuthMode = 'login' | 'register';
 export default function LoginScreen() {
   const insets = useSafeAreaInsets();
   const { theme, isDark } = useTheme();
-  const { loginWithEmail, register, loginWithApple, isLoading } = useAuth();
+  const { loginWithEmail, register, loginWithApple, loginWithGoogle, isLoading, isGoogleConfigured } = useAuth();
 
   const [mode, setMode] = useState<AuthMode>('login');
   const [email, setEmail] = useState('');
@@ -59,6 +59,16 @@ export default function LoginScreen() {
     const result = await loginWithApple();
     if (!result.success) {
       setError(result.error || 'Erreur Apple Sign-In');
+    }
+  };
+
+  const handleGoogleSignIn = async () => {
+    setError(null);
+    await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+    
+    const result = await loginWithGoogle();
+    if (!result.success) {
+      setError(result.error || 'Erreur Google Sign-In');
     }
   };
 
@@ -205,6 +215,20 @@ export default function LoginScreen() {
               <View style={[styles.divider, { backgroundColor: theme.border }]} />
             </View>
 
+            <Button
+              onPress={handleGoogleSignIn}
+              variant="outline"
+              style={styles.socialButton}
+              testID="button-google"
+            >
+              <View style={styles.socialButtonContent}>
+                <Feather name="globe" size={20} color="#4285F4" />
+                <ThemedText style={{ marginLeft: Spacing.sm }}>
+                  Continuer avec Google
+                </ThemedText>
+              </View>
+            </Button>
+
             {Platform.OS === 'ios' ? (
               <AppleAuthentication.AppleAuthenticationButton
                 buttonType={AppleAuthentication.AppleAuthenticationButtonType.SIGN_IN}
@@ -215,21 +239,7 @@ export default function LoginScreen() {
                 style={styles.appleButton}
                 onPress={handleAppleSignIn}
               />
-            ) : (
-              <Button
-                onPress={handleAppleSignIn}
-                variant="outline"
-                style={styles.socialButton}
-                testID="button-apple"
-              >
-                <View style={styles.socialButtonContent}>
-                  <Feather name="smartphone" size={20} color={theme.text} />
-                  <ThemedText style={{ marginLeft: Spacing.sm }}>
-                    Continuer avec Apple
-                  </ThemedText>
-                </View>
-              </Button>
-            )}
+            ) : null}
           </View>
 
           <ThemedText type="small" style={[styles.terms, { color: theme.textSecondary }]}>
