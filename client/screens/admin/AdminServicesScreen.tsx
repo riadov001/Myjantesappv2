@@ -130,7 +130,7 @@ export default function AdminServicesScreen() {
       <ScrollView
         contentContainerStyle={[
           styles.scrollContent,
-          { paddingTop: headerHeight + Spacing.lg, paddingBottom: tabBarHeight + Spacing.xl }
+          { paddingTop: headerHeight + Spacing.lg, paddingBottom: insets.bottom + Spacing.xl + 60 }
         ]}
         refreshControl={
           <RefreshControl refreshing={false} onRefresh={refetch} tintColor={theme.primary} />
