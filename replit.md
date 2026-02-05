@@ -13,8 +13,9 @@ MyJantes est une application mobile professionnelle pour la gestion de garages a
 - **UI**: Composants custom avec support dark mode
 
 ### Backend
-- **API**: Backend externe hébergé sur https://myjantes.mytoolsgroup.eu
-- **Authentification**: OAuth via Replit OpenID Connect
+- **API**: Backend externe hébergé sur https://appmytools.replit.app (PWA backend)
+- **Proxy Local**: Express server sur port 5000 qui proxie les requêtes vers le backend PWA
+- **Authentification**: Session cookies via le proxy (même authentification que la PWA)
 
 ### Structure des Dossiers
 ```
@@ -60,7 +61,7 @@ client/
 ## Configuration
 
 ### Variables d'Environnement
-- `EXPO_PUBLIC_DOMAIN`: Domaine de l'API backend (myjantes.mytoolsgroup.eu)
+- `EXPO_PUBLIC_DOMAIN`: Domaine du proxy local (via REPLIT_DEV_DOMAIN:5000)
 
 ### Thème
 - **Couleur primaire**: #dc2626 (Rouge MyJantes)
@@ -98,10 +99,15 @@ npm run server:dev  # Backend Express (port 5000)
 
 ## Changements Récents
 
+### Février 2026
+- Connexion au backend PWA (appmytools.replit.app) via proxy local
+- Authentification par email/mot de passe avec session cookies
+- Parité complète des fonctionnalités avec la PWA
+- Mêmes utilisateurs et données que la PWA
+
 ### Février 2025
 - Création initiale de l'application MyJantes
 - Implémentation de l'espace client complet
-- Connexion au backend externe
 - Support dark mode et thème rouge
 - Navigation bottom tabs avec 5 onglets
 
