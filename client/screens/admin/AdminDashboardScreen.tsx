@@ -138,6 +138,21 @@ export default function AdminDashboardScreen() {
           />
         </View>
 
+        <View style={styles.summaryStats}>
+          <Pressable style={styles.summaryItem} onPress={() => navigation.navigate('AdminQuotesTab')}>
+            <ThemedText style={styles.summaryValue}>{analytics?.totalQuotes || 0}</ThemedText>
+            <ThemedText style={styles.summaryLabel}>Total devis</ThemedText>
+          </Pressable>
+          <Pressable style={styles.summaryItem} onPress={() => navigation.navigate('AdminInvoicesTab')}>
+            <ThemedText style={styles.summaryValue}>{analytics?.totalInvoices || 0}</ThemedText>
+            <ThemedText style={styles.summaryLabel}>Total factures</ThemedText>
+          </Pressable>
+          <Pressable style={styles.summaryItem} onPress={() => navigation.navigate('AdminMoreTab', { screen: 'AdminReservations' })}>
+            <ThemedText style={styles.summaryValue}>{analytics?.totalReservations || 0}</ThemedText>
+            <ThemedText style={styles.summaryLabel}>Total RDV</ThemedText>
+          </Pressable>
+        </View>
+
         <Card style={styles.sectionCard}>
           <View style={styles.sectionHeader}>
             <Feather name="bar-chart-2" size={20} color={theme.primary} />
@@ -342,6 +357,26 @@ const styles = StyleSheet.create({
     fontSize: 12,
     opacity: 0.7,
     marginTop: Spacing.xs,
+  },
+  summaryStats: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    backgroundColor: 'rgba(128,128,128,0.05)',
+    borderRadius: BorderRadius.lg,
+    padding: Spacing.lg,
+    marginBottom: Spacing.lg,
+  },
+  summaryItem: {
+    alignItems: 'center',
+  },
+  summaryValue: {
+    fontSize: 20,
+    fontWeight: '700',
+  },
+  summaryLabel: {
+    fontSize: 12,
+    opacity: 0.6,
+    marginTop: 2,
   },
   chartContainer: {
     marginTop: Spacing.sm,
