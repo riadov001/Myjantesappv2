@@ -79,3 +79,4 @@ ensurePreviewReachable = "/status"
 [userenv.shared]
 EXPO_PUBLIC_DOMAIN = "myjantes.mytoolsgroup.eu"
 BACKEND_URL = "https://myjantes.mytoolsgroup.eu"
+EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID = "326677400956-dordpst90g12iip4fdpfkjihim3809rf.apps.googleusercontent.com"
