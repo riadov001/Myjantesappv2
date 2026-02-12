@@ -209,6 +209,30 @@ function configureExpoAndLanding(app: express.Application) {
       });
     }
 
+    if (req.path === "/garanties") {
+      const p = path.resolve(process.cwd(), "server", "templates", "garanties.html");
+      if (fs.existsSync(p)) {
+        res.setHeader("Content-Type", "text/html; charset=utf-8");
+        return res.send(fs.readFileSync(p, "utf-8"));
+      }
+    }
+
+    if (req.path === "/confidentialite") {
+      const p = path.resolve(process.cwd(), "server", "templates", "confidentialite.html");
+      if (fs.existsSync(p)) {
+        res.setHeader("Content-Type", "text/html; charset=utf-8");
+        return res.send(fs.readFileSync(p, "utf-8"));
+      }
+    }
+
+    if (req.path === "/cgv") {
+      const p = path.resolve(process.cwd(), "server", "templates", "cgv.html");
+      if (fs.existsSync(p)) {
+        res.setHeader("Content-Type", "text/html; charset=utf-8");
+        return res.send(fs.readFileSync(p, "utf-8"));
+      }
+    }
+
     next();
   });
 
