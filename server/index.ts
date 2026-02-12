@@ -178,6 +178,19 @@ function configureExpoAndLanding(app: express.Application) {
       return next();
     }
 
+    const legalPages: Record<string, string> = {
+      '/garanties': 'garanties.html',
+      '/confidentialite': 'confidentialite.html',
+      '/cgv': 'cgv.html',
+    };
+
+    if (legalPages[req.path]) {
+      const legalPath = path.resolve(process.cwd(), "server", "templates", legalPages[req.path]);
+      const legalHtml = fs.readFileSync(legalPath, "utf-8");
+      res.setHeader("Content-Type", "text/html; charset=utf-8");
+      return res.status(200).send(legalHtml);
+    }
+
     if (req.path !== "/" && req.path !== "/manifest") {
       return next();
     }
