@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { View, StyleSheet, Image, TextInput, ScrollView, Platform, KeyboardAvoidingView, Alert, Pressable } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useNavigation } from '@react-navigation/native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Feather } from '@expo/vector-icons';
 import * as Haptics from 'expo-haptics';
@@ -18,6 +19,7 @@ export default function LoginScreen() {
   const insets = useSafeAreaInsets();
   const { theme, isDark } = useTheme();
   const { loginWithEmail, register, loginWithApple, loginWithGoogle, isLoading, isGoogleConfigured } = useAuth();
+  const navigation = useNavigation<any>();
 
   const [mode, setMode] = useState<AuthMode>('login');
   const [email, setEmail] = useState('');
@@ -198,6 +200,18 @@ export default function LoginScreen() {
               {isSubmitting ? 'Chargement...' : mode === 'login' ? 'Se connecter' : "S'inscrire"}
             </Button>
 
+            {mode === 'login' ? (
+              <Pressable
+                onPress={() => navigation.navigate('ForgotPassword')}
+                style={styles.forgotPassword}
+                testID="button-forgot-password"
+              >
+                <ThemedText type="small" style={{ color: theme.primary }}>
+                  Mot de passe oublié ?
+                </ThemedText>
+              </Pressable>
+            ) : null}
+
             <Pressable onPress={toggleMode} style={styles.switchMode} testID="button-switch-mode">
               <ThemedText type="body" style={{ color: theme.textSecondary }}>
                 {mode === 'login' ? "Pas de compte ? " : "Déjà un compte ? "}
@@ -340,6 +354,10 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  forgotPassword: {
+    alignSelf: 'center',
+    paddingVertical: Spacing.xs,
   },
   terms: {
     textAlign: 'center',

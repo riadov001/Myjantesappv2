@@ -1,6 +1,6 @@
 import type { Express, Request, Response } from "express";
 
-const PWA_BACKEND_URL = 'https://appmytools.replit.app';
+const PWA_BACKEND_URL = 'https://appmyjantes.mytoolsgroup.eu';
 
 async function proxyRequest(req: Request, res: Response, method: string, path: string) {
   try {
@@ -148,6 +148,17 @@ export function setupPwaProxy(app: Express) {
   app.delete('/api/admin/invoices/:id/media/:mediaId', (req, res) => proxyRequest(req, res, 'DELETE', `/api/admin/invoices/${req.params.id}/media/${req.params.mediaId}`));
   app.get('/api/invoices/:id/media', (req, res) => proxyRequest(req, res, 'GET', `/api/invoices/${req.params.id}/media`));
   
+  // Password reset endpoints
+  app.post('/api/forgot-password', (req, res) => proxyRequest(req, res, 'POST', '/api/forgot-password'));
+  app.post('/api/reset-password', (req, res) => proxyRequest(req, res, 'POST', '/api/reset-password'));
+
+  // Delete user account
+  app.delete('/api/admin/users/:id', (req, res) => proxyRequest(req, res, 'DELETE', `/api/admin/users/${req.params.id}`));
+
+  // Employee endpoints
+  app.get('/api/employee/reservations', (req, res) => proxyRequest(req, res, 'GET', '/api/employee/reservations'));
+  app.get('/api/employee/planning', (req, res) => proxyRequest(req, res, 'GET', '/api/employee/planning'));
+
   // Push notification token registration
   app.post('/api/push-token', (req, res) => proxyRequest(req, res, 'POST', '/api/push-token'));
 

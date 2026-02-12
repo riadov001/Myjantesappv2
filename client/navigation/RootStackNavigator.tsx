@@ -3,8 +3,10 @@ import { ActivityIndicator, View } from 'react-native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
 import LoginScreen from '@/screens/LoginScreen';
+import ForgotPasswordScreen from '@/screens/ForgotPasswordScreen';
 import ClientTabNavigator from '@/navigation/ClientTabNavigator';
 import AdminTabNavigator from '@/navigation/AdminTabNavigator';
+import EmployeeTabNavigator from '@/navigation/EmployeeTabNavigator';
 import QuoteDetailScreen from '@/screens/client/QuoteDetailScreen';
 import InvoiceDetailScreen from '@/screens/client/InvoiceDetailScreen';
 import AdminUsersScreen from '@/screens/admin/AdminUsersScreen';
@@ -20,8 +22,10 @@ import { useTheme } from '@/hooks/useTheme';
 
 export type RootStackParamList = {
   Login: undefined;
+  ForgotPassword: undefined;
   Main: undefined;
   AdminMain: undefined;
+  EmployeeMain: undefined;
   QuoteDetail: { quoteId: string };
   InvoiceDetail: { invoiceId: string };
   AdminUsers: undefined;
@@ -49,6 +53,7 @@ export default function RootStackNavigator() {
   }
 
   const isAdmin = user?.role === 'admin' || user?.role === 'superadmin';
+  const isEmployee = user?.role === 'employee';
 
   return (
     <Stack.Navigator screenOptions={screenOptions}>
@@ -58,6 +63,12 @@ export default function RootStackNavigator() {
             <Stack.Screen
               name="AdminMain"
               component={AdminTabNavigator}
+              options={{ headerShown: false }}
+            />
+          ) : isEmployee ? (
+            <Stack.Screen
+              name="EmployeeMain"
+              component={EmployeeTabNavigator}
               options={{ headerShown: false }}
             />
           ) : (
@@ -146,6 +157,11 @@ export default function RootStackNavigator() {
         <Stack.Screen
           name="Login"
           component={LoginScreen}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="ForgotPassword"
+          component={ForgotPasswordScreen}
           options={{ headerShown: false }}
         />
       )}
