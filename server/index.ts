@@ -174,10 +174,6 @@ function configureExpoAndLanding(app: express.Application) {
   log("Serving static Expo files with dynamic manifest routing");
 
   app.use((req: Request, res: Response, next: NextFunction) => {
-    if (req.path.startsWith("/api")) {
-      return next();
-    }
-
     const legalPages: Record<string, string> = {
       '/garanties': 'garanties.html',
       '/garanties/': 'garanties.html',
@@ -190,10 +186,13 @@ function configureExpoAndLanding(app: express.Application) {
     if (legalPages[req.path]) {
       const legalPath = path.resolve(process.cwd(), "server", "templates", legalPages[req.path]);
       if (fs.existsSync(legalPath)) {
-        const legalHtml = fs.readFileSync(legalPath, "utf-8");
         res.setHeader("Content-Type", "text/html; charset=utf-8");
-        return res.status(200).send(legalHtml);
+        return res.status(200).send(fs.readFileSync(legalPath, "utf-8"));
       }
+    }
+
+    if (req.path.startsWith("/api")) {
+      return next();
     }
 
     if (req.path !== "/" && req.path !== "/manifest") {
