@@ -13,9 +13,10 @@ MyJantes est une application mobile professionnelle pour la gestion de garages a
 - **UI**: Composants custom avec support dark mode
 
 ### Backend
-- **API**: Backend externe hébergé sur https://appmytools.replit.app (PWA backend)
+- **API**: Backend externe hébergé sur https://appmyjantes.mytoolsgroup.eu (PWA backend)
 - **Proxy Local**: Express server sur port 5000 qui proxie les requêtes vers le backend PWA
 - **Authentification**: Session cookies via le proxy (même authentification que la PWA)
+- **Temps réel**: Polling automatique toutes les 30s (10s pour les notifications)
 
 ### Structure des Dossiers
 ```
@@ -41,9 +42,14 @@ client/
 │   └── useScreenOptions.ts
 ├── navigation/
 │   ├── ClientTabNavigator.tsx # Navigation client (5 tabs)
-│   └── RootStackNavigator.tsx # Navigation racine avec auth
+│   ├── AdminTabNavigator.tsx  # Navigation admin (5 tabs + more)
+│   ├── EmployeeTabNavigator.tsx # Navigation employé (5 tabs)
+│   └── RootStackNavigator.tsx # Navigation racine avec auth + rôles
 ├── screens/
 │   ├── LoginScreen.tsx
+│   ├── ForgotPasswordScreen.tsx
+│   ├── employee/
+│   │   └── EmployeeProfileScreen.tsx
 │   └── client/
 │       ├── ClientDashboardScreen.tsx
 │       ├── QuotesScreen.tsx
@@ -111,6 +117,11 @@ npm run server:dev  # Backend Express (port 5000)
 ## Changements Récents
 
 ### Février 2026
+- **Connexion Backend PWA**: URL mise à jour vers appmyjantes.mytoolsgroup.eu (même backend que la PWA)
+- **Mot de passe oublié**: Écran dédié avec envoi de lien de réinitialisation
+- **Rôle Employé**: Navigation dédiée avec planning, missions, chat, notifications et profil
+- **Temps réel**: Polling automatique sur toutes les listes (30s données, 10s notifications)
+- **Endpoints supplémentaires**: Mot de passe oublié, réinitialisation, suppression utilisateur, endpoints employé
 - **Dashboard Admin Amélioré**:
   - Graphique en barres montrant l'évolution du CA sur 6 mois
   - Section activité récente avec derniers devis et réservations
