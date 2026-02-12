@@ -16,6 +16,7 @@ import AdminNotificationsScreen from '@/screens/admin/AdminNotificationsScreen';
 import AdminSettingsScreen from '@/screens/admin/AdminSettingsScreen';
 import AdminPlanningScreen from '@/screens/admin/AdminPlanningScreen';
 import AdminReservationsScreen from '@/screens/admin/AdminReservationsScreen';
+import LegalScreen from '@/screens/LegalScreen';
 import { useScreenOptions } from '@/hooks/useScreenOptions';
 import { useAuth } from '@/contexts/AuthContext';
 import { useTheme } from '@/hooks/useTheme';
@@ -35,6 +36,7 @@ export type RootStackParamList = {
   AdminSettings: undefined;
   AdminPlanning: undefined;
   AdminReservations: undefined;
+  Legal: { initialTab?: 'garanties' | 'confidentialite' | 'cgv' };
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -152,6 +154,14 @@ export default function RootStackNavigator() {
               presentation: 'card',
             }}
           />
+          <Stack.Screen
+            name="Legal"
+            component={LegalScreen}
+            options={{
+              headerTitle: 'Informations légales',
+              presentation: 'card',
+            }}
+          />
         </>
       ) : (
         <>
@@ -164,6 +174,14 @@ export default function RootStackNavigator() {
             name="ForgotPassword"
             component={ForgotPasswordScreen}
             options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name="Legal"
+            component={LegalScreen}
+            options={{
+              headerTitle: 'Informations légales',
+              presentation: 'card',
+            }}
           />
         </>
       )}

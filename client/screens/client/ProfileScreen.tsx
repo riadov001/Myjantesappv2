@@ -252,6 +252,36 @@ export default function ProfileScreen() {
             À propos
           </ThemedText>
           <Card style={StyleSheet.flatten([styles.menuCard, { backgroundColor: theme.backgroundDefault }])}>
+            <Pressable style={styles.menuItem} onPress={() => (navigation as any).navigate('Legal', { initialTab: 'garanties' })} testID="button-legal-garanties">
+              <View style={styles.menuItemLeft}>
+                <View style={[styles.menuIcon, { backgroundColor: `${theme.primary}15` }]}>
+                  <Feather name="shield" size={20} color={theme.primary} />
+                </View>
+                <ThemedText type="body">Garanties</ThemedText>
+              </View>
+              <Feather name="chevron-right" size={20} color={theme.textSecondary} />
+            </Pressable>
+            <View style={[styles.divider, { backgroundColor: theme.border }]} />
+            <Pressable style={styles.menuItem} onPress={() => (navigation as any).navigate('Legal', { initialTab: 'confidentialite' })} testID="button-legal-confidentialite">
+              <View style={styles.menuItemLeft}>
+                <View style={[styles.menuIcon, { backgroundColor: `${theme.primary}15` }]}>
+                  <Feather name="lock" size={20} color={theme.primary} />
+                </View>
+                <ThemedText type="body">Politique de confidentialité</ThemedText>
+              </View>
+              <Feather name="chevron-right" size={20} color={theme.textSecondary} />
+            </Pressable>
+            <View style={[styles.divider, { backgroundColor: theme.border }]} />
+            <Pressable style={styles.menuItem} onPress={() => (navigation as any).navigate('Legal', { initialTab: 'cgv' })} testID="button-legal-cgv">
+              <View style={styles.menuItemLeft}>
+                <View style={[styles.menuIcon, { backgroundColor: `${theme.primary}15` }]}>
+                  <Feather name="file-text" size={20} color={theme.primary} />
+                </View>
+                <ThemedText type="body">Conditions Générales de Vente</ThemedText>
+              </View>
+              <Feather name="chevron-right" size={20} color={theme.textSecondary} />
+            </Pressable>
+            <View style={[styles.divider, { backgroundColor: theme.border }]} />
             <View style={styles.menuItem}>
               <View style={styles.menuItemLeft}>
                 <View style={[styles.menuIcon, { backgroundColor: `${theme.textSecondary}15` }]}>

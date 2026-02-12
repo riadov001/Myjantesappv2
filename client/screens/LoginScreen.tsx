@@ -256,9 +256,20 @@ export default function LoginScreen() {
             ) : null}
           </View>
 
-          <ThemedText type="small" style={[styles.terms, { color: theme.textSecondary }]}>
-            En vous connectant, vous acceptez nos conditions d'utilisation
-          </ThemedText>
+          <View style={styles.legalLinks}>
+            <ThemedText type="small" style={{ color: theme.textSecondary, textAlign: 'center' }}>
+              En vous connectant, vous acceptez nos
+            </ThemedText>
+            <View style={styles.legalLinksRow}>
+              <Pressable onPress={() => navigation.navigate('Legal', { initialTab: 'cgv' })} testID="button-login-cgv">
+                <ThemedText type="small" style={{ color: theme.primary, textDecorationLine: 'underline' }}>CGV</ThemedText>
+              </Pressable>
+              <ThemedText type="small" style={{ color: theme.textSecondary }}> et notre </ThemedText>
+              <Pressable onPress={() => navigation.navigate('Legal', { initialTab: 'confidentialite' })} testID="button-login-confidentialite">
+                <ThemedText type="small" style={{ color: theme.primary, textDecorationLine: 'underline' }}>Politique de confidentialité</ThemedText>
+              </Pressable>
+            </View>
+          </View>
         </ScrollView>
       </KeyboardAvoidingView>
     </View>
@@ -359,8 +370,15 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     paddingVertical: Spacing.xs,
   },
-  terms: {
-    textAlign: 'center',
+  legalLinks: {
+    alignItems: 'center',
     marginTop: Spacing.xl,
+    gap: 4,
+  },
+  legalLinksRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    flexWrap: 'wrap',
+    justifyContent: 'center',
   },
 });
