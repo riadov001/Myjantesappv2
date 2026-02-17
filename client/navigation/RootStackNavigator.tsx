@@ -33,7 +33,6 @@ export type RootStackParamList = {
   AdminServices: undefined;
   AdminChat: undefined;
   AdminNotifications: undefined;
-  AdminSettings: undefined;
   AdminPlanning: undefined;
   AdminReservations: undefined;
   Legal: { initialTab?: 'garanties' | 'confidentialite' | 'cgv' };
@@ -126,14 +125,6 @@ export default function RootStackNavigator() {
             component={AdminNotificationsScreen}
             options={{
               headerTitle: 'Notifications',
-              presentation: 'card',
-            }}
-          />
-          <Stack.Screen
-            name="AdminSettings"
-            component={AdminSettingsScreen}
-            options={{
-              headerTitle: 'Paramètres',
               presentation: 'card',
             }}
           />

@@ -46,9 +46,6 @@ export default function AdminDashboardScreen() {
   const pendingInvoices = invoices?.filter(i => i.status === 'pending').length || 0;
   const pendingReservations = reservations?.filter(r => r.status === 'pending').length || 0;
 
-  console.log('AdminDashboard - Reservations Raw:', reservations);
-  console.log('AdminDashboard - Pending Count:', pendingReservations);
-
   const formatCurrency = (value: number | string | undefined) => {
     const num = Number(value) || 0;
     return num.toLocaleString('fr-FR', { style: 'currency', currency: 'EUR' });
