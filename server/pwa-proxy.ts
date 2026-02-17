@@ -8,6 +8,7 @@ async function proxyRequest(req: Request, res: Response, method: string, path: s
     
     const headers: Record<string, string> = {
       'Content-Type': 'application/json',
+      'Accept': 'application/json',
     };
     
     if (req.headers.cookie) {
@@ -17,7 +18,7 @@ async function proxyRequest(req: Request, res: Response, method: string, path: s
     const fetchOptions: RequestInit = {
       method,
       headers,
-      credentials: 'include',
+      redirect: 'follow',
     };
     
     if (method !== 'GET' && method !== 'HEAD' && req.body) {
@@ -28,11 +29,23 @@ async function proxyRequest(req: Request, res: Response, method: string, path: s
     
     const setCookieHeaders = response.headers.getSetCookie?.() || [];
     if (setCookieHeaders.length > 0) {
-      res.setHeader('Set-Cookie', setCookieHeaders);
+      const fixedCookies = setCookieHeaders.map(cookie => 
+        cookie
+          .replace(/;\s*SameSite=\w+/gi, '; SameSite=None')
+          .replace(/;\s*Secure/gi, '; Secure')
+      );
+      if (!fixedCookies.some(c => c.includes('SameSite='))) {
+        res.setHeader('Set-Cookie', fixedCookies.map(c => c + '; SameSite=None; Secure'));
+      } else {
+        res.setHeader('Set-Cookie', fixedCookies);
+      }
     } else {
       const setCookie = response.headers.get('set-cookie');
       if (setCookie) {
-        res.setHeader('Set-Cookie', setCookie);
+        const fixed = setCookie
+          .replace(/;\s*SameSite=\w+/gi, '; SameSite=None')
+          .replace(/;\s*Secure/gi, '; Secure');
+        res.setHeader('Set-Cookie', fixed);
       }
     }
     
@@ -50,7 +63,11 @@ async function proxyRequest(req: Request, res: Response, method: string, path: s
       res.status(response.status).send(Buffer.from(buffer));
     } else {
       const text = await response.text();
-      res.status(response.status).send(text);
+      if (contentType && contentType.includes('text/html')) {
+        res.status(response.status === 200 ? 404 : response.status).json({ message: 'Endpoint non disponible' });
+      } else {
+        res.status(response.status).send(text);
+      }
     }
   } catch (error) {
     console.error('Proxy error:', error);
@@ -85,8 +102,8 @@ export function setupPwaProxy(app: Express) {
   app.patch('/api/notifications/:id/read', (req, res) => proxyRequest(req, res, 'PATCH', `/api/notifications/${req.params.id}/read`));
   app.patch('/api/notifications/read-all', (req, res) => proxyRequest(req, res, 'PATCH', '/api/notifications/read-all'));
   
-  app.get('/api/prestations', (req, res) => proxyRequest(req, res, 'GET', '/api/prestations?format=json'));
-  app.get('/api/services', (req, res) => proxyRequest(req, res, 'GET', '/api/services?format=json'));
+  app.get('/api/prestations', (req, res) => proxyRequest(req, res, 'GET', '/api/services'));
+  app.get('/api/services', (req, res) => proxyRequest(req, res, 'GET', '/api/services'));
   
   // PDF endpoints
   app.get('/api/quotes/:id/pdf', (req, res) => proxyRequest(req, res, 'GET', `/api/quotes/${req.params.id}/pdf`));
