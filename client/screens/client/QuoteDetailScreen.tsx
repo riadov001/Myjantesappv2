@@ -36,7 +36,7 @@ export default function QuoteDetailScreen() {
       await Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
       await refetch();
     } catch (error) {
-      Alert.alert('Erreur', "Impossible d'approuver le devis");
+      Alert.alert('Fonctionnalité indisponible', "L'approbation des devis est temporairement indisponible. Cette fonctionnalité est en cours de développement.");
     } finally {
       setActionLoading(null);
     }
@@ -58,7 +58,7 @@ export default function QuoteDetailScreen() {
               await Haptics.notificationAsync(Haptics.NotificationFeedbackType.Warning);
               await refetch();
             } catch (error) {
-              Alert.alert('Erreur', 'Impossible de refuser le devis');
+              Alert.alert('Fonctionnalité indisponible', 'Le refus des devis est temporairement indisponible. Cette fonctionnalité est en cours de développement.');
             } finally {
               setActionLoading(null);
             }

@@ -124,7 +124,7 @@ export default function AdminPlanningScreen() {
       refetch();
       Alert.alert('Succès', 'Réservation confirmée');
     } catch (error) {
-      Alert.alert('Erreur', 'Impossible de confirmer');
+      Alert.alert('Fonctionnalité indisponible', 'La confirmation est temporairement indisponible. Cette fonctionnalité est en cours de développement.');
     }
   };
 
@@ -141,7 +141,7 @@ export default function AdminPlanningScreen() {
             setDetailModal(false);
             refetch();
           } catch (error) {
-            Alert.alert('Erreur', 'Impossible d\'annuler');
+            Alert.alert('Fonctionnalité indisponible', "L'annulation est temporairement indisponible.");
           }
         },
       },
@@ -165,7 +165,7 @@ export default function AdminPlanningScreen() {
       refetch();
       Alert.alert('Succès', 'Assignation mise à jour');
     } catch (error) {
-      Alert.alert('Erreur', 'Impossible d\'assigner');
+      Alert.alert('Fonctionnalité indisponible', "L'assignation est temporairement indisponible. Cette fonctionnalité est en cours de développement.");
     }
   };
 

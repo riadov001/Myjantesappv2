@@ -65,7 +65,7 @@ export default function AdminServicesScreen() {
 
   const handleSaveService = async () => {
     if (!formData.name.trim()) {
-      Alert.alert('Erreur', 'Le nom du service est requis');
+      Alert.alert('Champ requis', 'Le nom du service est requis.');
       return;
     }
 

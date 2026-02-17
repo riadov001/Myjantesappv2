@@ -65,7 +65,7 @@ export default function AdminUsersScreen() {
       refetch();
       Alert.alert('Succès', 'Rôle mis à jour');
     } catch (error) {
-      Alert.alert('Erreur', 'Impossible de modifier le rôle');
+      Alert.alert('Fonctionnalité indisponible', 'La gestion des rôles utilisateurs est temporairement indisponible. Cette fonctionnalité est en cours de développement.');
     }
   };
 

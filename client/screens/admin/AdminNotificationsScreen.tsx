@@ -85,7 +85,7 @@ export default function AdminNotificationsScreen() {
       refetch();
       Alert.alert('Succès', 'Toutes les notifications ont été marquées comme lues');
     } catch (error) {
-      Alert.alert('Erreur', 'Impossible de marquer les notifications comme lues');
+      Alert.alert('Fonctionnalité indisponible', 'La gestion des notifications est temporairement indisponible.');
     }
   };
 

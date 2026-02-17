@@ -60,7 +60,7 @@ export default function AdminReservationsScreen() {
       refetch();
       Alert.alert('Succès', 'Réservation confirmée');
     } catch (error) {
-      Alert.alert('Erreur', 'Impossible de confirmer la réservation');
+      Alert.alert('Fonctionnalité indisponible', 'La confirmation des réservations est temporairement indisponible. Cette fonctionnalité est en cours de développement.');
     }
   };
 
@@ -78,7 +78,7 @@ export default function AdminReservationsScreen() {
               await cancelReservation.mutateAsync(reservation.id);
               refetch();
             } catch (error) {
-              Alert.alert('Erreur', 'Impossible d\'annuler la réservation');
+              Alert.alert('Fonctionnalité indisponible', "L'annulation des réservations est temporairement indisponible.");
             }
           },
         },

@@ -65,7 +65,7 @@ export default function ReservationsScreen() {
               await Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
               await refetch();
             } catch (error) {
-              Alert.alert('Erreur', "Impossible d'annuler la réservation");
+              Alert.alert('Fonctionnalité indisponible', "L'annulation des réservations est temporairement indisponible.");
             }
           },
         },
@@ -75,7 +75,7 @@ export default function ReservationsScreen() {
 
   const handleCreateReservation = async () => {
     if (!selectedService || !date || !time) {
-      Alert.alert('Erreur', 'Veuillez remplir tous les champs obligatoires');
+      Alert.alert('Champs requis', 'Veuillez remplir tous les champs obligatoires.');
       return;
     }
 
@@ -95,7 +95,7 @@ export default function ReservationsScreen() {
       setNotes('');
       await refetch();
     } catch (error) {
-      Alert.alert('Erreur', 'Impossible de créer la réservation');
+      Alert.alert('Fonctionnalité indisponible', 'La création de réservations est temporairement indisponible. Cette fonctionnalité est en cours de développement.');
     } finally {
       setIsSubmitting(false);
     }

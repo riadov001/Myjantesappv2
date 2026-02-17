@@ -46,7 +46,7 @@ export default function ProfileScreen() {
       await Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
       await refetchNotifications();
     } catch (error) {
-      Alert.alert('Erreur', 'Impossible de marquer les notifications comme lues');
+      Alert.alert('Fonctionnalité indisponible', 'La gestion des notifications est temporairement indisponible.');
     }
   };
 

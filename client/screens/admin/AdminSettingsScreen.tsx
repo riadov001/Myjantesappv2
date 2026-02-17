@@ -111,7 +111,7 @@ export default function AdminSettingsScreen() {
       Alert.alert('Succès', 'Paramètres enregistrés avec succès');
       refetch();
     } catch (error) {
-      Alert.alert('Erreur', 'Impossible d\'enregistrer les paramètres');
+      Alert.alert('Fonctionnalité indisponible', "L'enregistrement des paramètres est temporairement indisponible. Cette fonctionnalité est en cours de développement.");
     }
   };
 
