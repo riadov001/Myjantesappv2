@@ -102,8 +102,8 @@ export function setupPwaProxy(app: Express) {
   app.patch('/api/notifications/:id/read', (req, res) => proxyRequest(req, res, 'PATCH', `/api/notifications/${req.params.id}/read`));
   app.patch('/api/notifications/read-all', (req, res) => proxyRequest(req, res, 'PATCH', '/api/notifications/read-all'));
   
-  app.get('/api/prestations', (req, res) => proxyRequest(req, res, 'GET', '/api/engagements'));
-  app.get('/api/services', (req, res) => proxyRequest(req, res, 'GET', '/api/engagements'));
+  app.get('/api/prestations', (req, res) => proxyRequest(req, res, 'GET', '/api/engagement'));
+  app.get('/api/services', (req, res) => proxyRequest(req, res, 'GET', '/api/engagement'));
   
   // PDF endpoints
   app.get('/api/quotes/:id/pdf', (req, res) => proxyRequest(req, res, 'GET', `/api/quotes/${req.params.id}/pdf`));
