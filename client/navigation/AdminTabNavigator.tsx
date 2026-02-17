@@ -17,8 +17,6 @@ export type AdminTabParamList = {
   AdminHomeTab: undefined;
   AdminQuotesTab: undefined;
   AdminInvoicesTab: undefined;
-  AdminReservationsTab: undefined;
-  AdminServicesTab: undefined;
   AdminMoreTab: undefined;
 };
 
@@ -91,17 +89,6 @@ export default function AdminTabNavigator() {
           headerTitle: 'Gestion des Factures',
           tabBarIcon: ({ color, size }) => (
             <Feather name="credit-card" size={size} color={color} />
-          ),
-        }}
-      />
-      <Tab.Screen
-        name="AdminServicesTab"
-        component={AdminServicesScreen}
-        options={{
-          title: 'Prestations',
-          headerTitle: 'Gestion des Prestations',
-          tabBarIcon: ({ color, size }) => (
-            <Feather name="tool" size={size} color={color} />
           ),
         }}
       />

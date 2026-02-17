@@ -90,6 +90,9 @@ export default function AdminReservationsScreen() {
   const confirmedReservations = reservations?.filter(r => r.status === 'confirmed') || [];
   const otherReservations = reservations?.filter(r => r.status !== 'pending' && r.status !== 'confirmed') || [];
 
+  console.log('AdminReservationsScreen - All:', reservations);
+  console.log('AdminReservationsScreen - Pending:', pendingReservations);
+
   if (isLoading) {
     return (
       <ThemedView style={styles.container}>

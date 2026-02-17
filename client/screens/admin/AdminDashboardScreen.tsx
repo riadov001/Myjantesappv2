@@ -29,16 +29,25 @@ export default function AdminDashboardScreen() {
 
   const isLoading = analyticsLoading || quotesLoading || invoicesLoading || reservationsLoading;
 
-  const handleRefresh = () => {
-    refetchAnalytics();
-    refetchQuotes();
-    refetchInvoices();
-    refetchReservations();
+  const handleRefresh = async () => {
+    try {
+      await Promise.all([
+        refetchAnalytics(),
+        refetchQuotes(),
+        refetchInvoices(),
+        refetchReservations()
+      ]);
+    } catch (error) {
+      console.error('Error refreshing dashboard:', error);
+    }
   };
 
   const pendingQuotes = quotes?.filter(q => q.status === 'pending').length || 0;
   const pendingInvoices = invoices?.filter(i => i.status === 'pending').length || 0;
   const pendingReservations = reservations?.filter(r => r.status === 'pending').length || 0;
+
+  console.log('AdminDashboard - Reservations Raw:', reservations);
+  console.log('AdminDashboard - Pending Count:', pendingReservations);
 
   const formatCurrency = (value: number | string | undefined) => {
     const num = Number(value) || 0;

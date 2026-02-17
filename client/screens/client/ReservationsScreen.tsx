@@ -47,7 +47,8 @@ export default function ReservationsScreen() {
 
   const onRefresh = async () => {
     await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-    await refetch();
+    const result = await refetch();
+    console.log('Manual refresh reservations:', result.data);
   };
 
   const handleCancel = (id: string) => {
@@ -237,6 +238,8 @@ export default function ReservationsScreen() {
   const sortedReservations = [...(reservations || [])].sort(
     (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
   );
+
+  console.log('ClientReservationsScreen - All:', reservations);
 
   const ListHeader = () => {
     if (!calendarConfigured || sortedReservations.length === 0) return null;
