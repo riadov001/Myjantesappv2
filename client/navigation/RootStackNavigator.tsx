@@ -13,7 +13,6 @@ import AdminUsersScreen from '@/screens/admin/AdminUsersScreen';
 import AdminServicesScreen from '@/screens/admin/AdminServicesScreen';
 import AdminChatScreen from '@/screens/admin/AdminChatScreen';
 import AdminNotificationsScreen from '@/screens/admin/AdminNotificationsScreen';
-import AdminSettingsScreen from '@/screens/admin/AdminSettingsScreen';
 import AdminPlanningScreen from '@/screens/admin/AdminPlanningScreen';
 import AdminReservationsScreen from '@/screens/admin/AdminReservationsScreen';
 import LegalScreen from '@/screens/LegalScreen';

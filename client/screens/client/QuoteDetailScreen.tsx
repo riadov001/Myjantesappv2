@@ -95,7 +95,7 @@ export default function QuoteDetailScreen() {
           <StatusBadge status={quote.status} />
         </View>
 
-        <Card style={[styles.section, { backgroundColor: theme.backgroundDefault }]}>
+        <Card style={{ ...styles.section, backgroundColor: theme.backgroundDefault }}>
           <View style={styles.sectionHeader}>
             <Feather name="truck" size={20} color={theme.primary} />
             <ThemedText type="h4">Véhicule</ThemedText>
@@ -124,7 +124,7 @@ export default function QuoteDetailScreen() {
           ) : null}
         </Card>
 
-        <Card style={[styles.section, { backgroundColor: theme.backgroundDefault }]}>
+        <Card style={{ ...styles.section, backgroundColor: theme.backgroundDefault }}>
           <View style={styles.sectionHeader}>
             <Feather name="list" size={20} color={theme.primary} />
             <ThemedText type="h4">Articles</ThemedText>
@@ -157,7 +157,7 @@ export default function QuoteDetailScreen() {
         </Card>
 
         {quote.notes ? (
-          <Card style={[styles.section, { backgroundColor: theme.backgroundDefault }]}>
+          <Card style={{ ...styles.section, backgroundColor: theme.backgroundDefault }}>
             <View style={styles.sectionHeader}>
               <Feather name="message-square" size={20} color={theme.primary} />
               <ThemedText type="h4">Notes</ThemedText>

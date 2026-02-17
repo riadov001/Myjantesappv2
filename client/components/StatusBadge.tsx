@@ -4,7 +4,7 @@ import { ThemedText } from '@/components/ThemedText';
 import { useTheme } from '@/hooks/useTheme';
 import { Spacing, BorderRadius } from '@/constants/theme';
 
-type StatusType = 'pending' | 'approved' | 'paid' | 'rejected' | 'cancelled' | 'overdue' | 'confirmed' | 'completed';
+type StatusType = 'pending' | 'approved' | 'paid' | 'rejected' | 'cancelled' | 'overdue' | 'confirmed' | 'completed' | 'draft' | 'sent';
 
 interface StatusBadgeProps {
   status: StatusType;
@@ -20,6 +20,8 @@ const STATUS_LABELS: Record<StatusType, string> = {
   overdue: 'En retard',
   confirmed: 'Confirmé',
   completed: 'Terminé',
+  draft: 'Brouillon',
+  sent: 'Envoyé',
 };
 
 export function StatusBadge({ status, size = 'medium' }: StatusBadgeProps) {
@@ -39,6 +41,9 @@ export function StatusBadge({ status, size = 'medium' }: StatusBadgeProps) {
         return theme.statusRejected;
       case 'overdue':
         return theme.statusOverdue;
+      case 'draft':
+      case 'sent':
+        return theme.textSecondary;
       default:
         return theme.textSecondary;
     }
