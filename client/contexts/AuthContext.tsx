@@ -53,13 +53,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         const contentType = response.headers.get('content-type');
         if (contentType && contentType.includes('application/json')) {
           const userData = await response.json();
-          if (userData && userData.id) {
+          if (userData && (userData.id || userData.user?.id)) {
+            const finalUser = userData.user || userData;
             return {
-              id: userData.id,
-              email: userData.email,
-              username: userData.firstName || userData.email.split('@')[0],
-              role: userData.role || 'client',
-              garageId: userData.garageId,
+              id: finalUser.id,
+              email: finalUser.email,
+              username: finalUser.firstName || finalUser.email.split('@')[0],
+              role: finalUser.role || 'client',
+              garageId: finalUser.garageId,
             } as User;
           }
         }
@@ -72,13 +73,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const handleAuthResponse = async (data: any): Promise<{ success: boolean; error?: string }> => {
-    if (data && data.user && data.user.id) {
+    const finalUser = data?.user || data;
+    if (finalUser && finalUser.id) {
       const userData: User = {
-        id: data.user.id,
-        email: data.user.email,
-        username: data.user.firstName || data.user.email.split('@')[0],
-        role: data.user.role || 'client',
-        garageId: data.user.garageId,
+        id: finalUser.id,
+        email: finalUser.email,
+        username: finalUser.firstName || finalUser.email.split('@')[0],
+        role: finalUser.role || 'client',
+        garageId: finalUser.garageId,
       };
       setUser(userData);
       await AsyncStorage.setItem(AUTH_STORAGE_KEY, JSON.stringify(userData));
