@@ -87,7 +87,7 @@ export default function AdminServicesScreen() {
       refetch();
       Alert.alert('Succès', selectedService ? 'Service modifié' : 'Service créé');
     } catch (error) {
-      Alert.alert('Erreur', 'Impossible de sauvegarder le service');
+      Alert.alert('Fonctionnalité indisponible', 'La gestion des services est temporairement indisponible. Cette fonctionnalité est en cours de développement.');
     }
   };
 
@@ -99,7 +99,7 @@ export default function AdminServicesScreen() {
       });
       refetch();
     } catch (error) {
-      Alert.alert('Erreur', 'Impossible de modifier le statut');
+      Alert.alert('Fonctionnalité indisponible', 'La modification du statut est temporairement indisponible.');
     }
   };
 

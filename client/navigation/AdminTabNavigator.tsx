@@ -2,7 +2,7 @@ import React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Feather } from '@expo/vector-icons';
 import { BlurView } from 'expo-blur';
-import { Platform, StyleSheet } from 'react-native';
+import { Platform, StyleSheet, View } from 'react-native';
 
 import AdminDashboardScreen from '@/screens/admin/AdminDashboardScreen';
 import AdminQuotesScreen from '@/screens/admin/AdminQuotesScreen';
@@ -11,6 +11,7 @@ import AdminReservationsScreen from '@/screens/admin/AdminReservationsScreen';
 import AdminServicesScreen from '@/screens/admin/AdminServicesScreen';
 import AdminMoreScreen from '@/screens/admin/AdminMoreScreen';
 import { HeaderTitle } from '@/components/HeaderTitle';
+import { FloatingSupportButton } from '@/components/FloatingSupportButton';
 import { useTheme } from '@/hooks/useTheme';
 export type AdminTabParamList = {
   AdminHomeTab: undefined;
@@ -27,6 +28,7 @@ export default function AdminTabNavigator() {
   const { theme, isDark } = useTheme();
 
   return (
+    <View style={{ flex: 1 }}>
     <Tab.Navigator
       initialRouteName="AdminHomeTab"
       screenOptions={{
@@ -115,5 +117,7 @@ export default function AdminTabNavigator() {
         }}
       />
     </Tab.Navigator>
+    <FloatingSupportButton />
+    </View>
   );
 }

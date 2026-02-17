@@ -89,7 +89,7 @@ export default function AdminInvoicesScreen() {
       refetch();
       Alert.alert('Succès', 'Facture marquée comme payée');
     } catch (error) {
-      Alert.alert('Erreur', 'Impossible de marquer la facture comme payée');
+      Alert.alert('Fonctionnalité indisponible', 'Le marquage de paiement est temporairement indisponible. Cette fonctionnalité est en cours de développement.');
     }
   };
 
@@ -109,7 +109,7 @@ export default function AdminInvoicesScreen() {
       setEmailModal(false);
       Alert.alert('Succès', 'Email envoyé au client');
     } catch (error) {
-      Alert.alert('Erreur', 'Impossible d\'envoyer l\'email');
+      Alert.alert('Fonctionnalité indisponible', "L'envoi d'email est temporairement indisponible. Cette fonctionnalité est en cours de développement.");
     } finally {
       setSendingEmail(false);
     }
@@ -134,7 +134,7 @@ export default function AdminInvoicesScreen() {
       }
     } catch (error) {
       console.error('PDF download error:', error);
-      Alert.alert('Erreur', 'Impossible de télécharger le PDF');
+      Alert.alert('Fonctionnalité indisponible', 'Le téléchargement des PDF est temporairement indisponible. Cette fonctionnalité est en cours de développement.');
     }
   };
 
@@ -230,7 +230,7 @@ export default function AdminInvoicesScreen() {
       refetch();
     } catch (error) {
       console.error('Upload error:', error);
-      Alert.alert('Erreur', 'Impossible d\'uploader les photos');
+      Alert.alert('Fonctionnalité indisponible', "L'envoi de photos est temporairement indisponible. Cette fonctionnalité est en cours de développement.");
     } finally {
       setUploading(false);
     }

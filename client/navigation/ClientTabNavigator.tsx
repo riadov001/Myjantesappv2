@@ -2,7 +2,7 @@ import React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Feather } from '@expo/vector-icons';
 import { BlurView } from 'expo-blur';
-import { Platform, StyleSheet } from 'react-native';
+import { Platform, StyleSheet, View } from 'react-native';
 
 import ClientDashboardScreen from '@/screens/client/ClientDashboardScreen';
 import QuotesScreen from '@/screens/client/QuotesScreen';
@@ -10,6 +10,7 @@ import InvoicesScreen from '@/screens/client/InvoicesScreen';
 import ReservationsScreen from '@/screens/client/ReservationsScreen';
 import ProfileScreen from '@/screens/client/ProfileScreen';
 import { HeaderTitle } from '@/components/HeaderTitle';
+import { FloatingSupportButton } from '@/components/FloatingSupportButton';
 import { useTheme } from '@/hooks/useTheme';
 
 export type ClientTabParamList = {
@@ -26,6 +27,7 @@ export default function ClientTabNavigator() {
   const { theme, isDark } = useTheme();
 
   return (
+    <View style={{ flex: 1 }}>
     <Tab.Navigator
       initialRouteName="HomeTab"
       screenOptions={{
@@ -114,5 +116,7 @@ export default function ClientTabNavigator() {
         }}
       />
     </Tab.Navigator>
+    <FloatingSupportButton />
+    </View>
   );
 }

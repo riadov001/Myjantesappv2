@@ -176,6 +176,9 @@ export function setupPwaProxy(app: Express) {
   app.get('/api/employee/reservations', (req, res) => proxyRequest(req, res, 'GET', '/api/employee/reservations'));
   app.get('/api/employee/planning', (req, res) => proxyRequest(req, res, 'GET', '/api/employee/planning'));
 
+  // Support endpoint
+  app.post('/api/support', (req, res) => proxyRequest(req, res, 'POST', '/api/support'));
+
   // Push notification token registration
   app.post('/api/push-token', (req, res) => proxyRequest(req, res, 'POST', '/api/push-token'));
 

@@ -138,7 +138,7 @@ export default function AdminQuotesScreen() {
       setModalVisible(false);
       refetch();
     } catch (error) {
-      Alert.alert('Erreur', 'Impossible de sauvegarder le devis');
+      Alert.alert('Fonctionnalité indisponible', 'La création/modification des devis est temporairement indisponible. Cette fonctionnalité est en cours de développement.');
     }
   };
 
@@ -156,7 +156,7 @@ export default function AdminQuotesScreen() {
               await deleteQuote.mutateAsync(quote.id);
               refetch();
             } catch (error) {
-              Alert.alert('Erreur', 'Impossible de supprimer le devis');
+              Alert.alert('Fonctionnalité indisponible', 'La suppression des devis est temporairement indisponible.');
             }
           },
         },
@@ -170,7 +170,7 @@ export default function AdminQuotesScreen() {
       Alert.alert('Succès', 'Facture générée avec succès');
       refetch();
     } catch (error) {
-      Alert.alert('Erreur', 'Impossible de générer la facture');
+      Alert.alert('Fonctionnalité indisponible', 'La génération de factures est temporairement indisponible. Cette fonctionnalité est en cours de développement.');
     }
   };
 
@@ -179,7 +179,7 @@ export default function AdminQuotesScreen() {
       await updateQuote.mutateAsync({ id: quote.id, data: { status: 'approved' } });
       refetch();
     } catch (error) {
-      Alert.alert('Erreur', 'Impossible de valider le devis');
+      Alert.alert('Fonctionnalité indisponible', 'La validation des devis est temporairement indisponible.');
     }
   };
 
@@ -201,7 +201,7 @@ export default function AdminQuotesScreen() {
       }
     } catch (error) {
       console.error('PDF download error:', error);
-      Alert.alert('Erreur', 'Impossible de télécharger le PDF');
+      Alert.alert('Fonctionnalité indisponible', 'Le téléchargement des PDF est temporairement indisponible. Cette fonctionnalité est en cours de développement.');
     }
   };
 
@@ -297,7 +297,7 @@ export default function AdminQuotesScreen() {
       refetch();
     } catch (error) {
       console.error('Upload error:', error);
-      Alert.alert('Erreur', 'Impossible d\'uploader les photos');
+      Alert.alert('Fonctionnalité indisponible', "L'envoi de photos est temporairement indisponible. Cette fonctionnalité est en cours de développement.");
     } finally {
       setUploading(false);
     }

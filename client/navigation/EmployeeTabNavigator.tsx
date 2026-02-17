@@ -2,7 +2,7 @@ import React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Feather } from '@expo/vector-icons';
 import { BlurView } from 'expo-blur';
-import { Platform, StyleSheet } from 'react-native';
+import { Platform, StyleSheet, View } from 'react-native';
 
 import AdminPlanningScreen from '@/screens/admin/AdminPlanningScreen';
 import AdminReservationsScreen from '@/screens/admin/AdminReservationsScreen';
@@ -10,6 +10,7 @@ import AdminChatScreen from '@/screens/admin/AdminChatScreen';
 import AdminNotificationsScreen from '@/screens/admin/AdminNotificationsScreen';
 import EmployeeProfileScreen from '@/screens/employee/EmployeeProfileScreen';
 import { HeaderTitle } from '@/components/HeaderTitle';
+import { FloatingSupportButton } from '@/components/FloatingSupportButton';
 import { useTheme } from '@/hooks/useTheme';
 
 export type EmployeeTabParamList = {
@@ -26,6 +27,7 @@ export default function EmployeeTabNavigator() {
   const { theme, isDark } = useTheme();
 
   return (
+    <View style={{ flex: 1 }}>
     <Tab.Navigator
       initialRouteName="EmployeePlanningTab"
       screenOptions={{
@@ -116,5 +118,7 @@ export default function EmployeeTabNavigator() {
         }}
       />
     </Tab.Navigator>
+    <FloatingSupportButton />
+    </View>
   );
 }
